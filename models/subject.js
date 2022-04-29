@@ -12,6 +12,6 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
   });
-  //   console.log(Subject === sequelize.models.Subject);
+  // console.log(Subject === sequelize.models.Subject);
   return Subject;
 };

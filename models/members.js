@@ -26,5 +26,5 @@ module.exports = (sequelize) => {
     }
   );
   //   console.log(subject === sequelize.models.subject);
-  return Subject;
+  return Members;
 };

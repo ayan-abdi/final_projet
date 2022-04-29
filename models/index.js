@@ -1,7 +1,7 @@
 const { Sequelize } = require("sequelize");
 
 // Initialisation de sequelize
-const sequelize = Sequelize(
+const sequelize = new Sequelize(
   process.env.DB_DATABASE,
   process.env.DB_USERNAME,
   process.env.DB_PASSWORD,
@@ -26,11 +26,12 @@ db.sequelize = sequelize;
 
 // Ajout des models
 db.Subject = require("./subject")(sequelize);
-db.Categories = require("./categories");
-db.Members = require("./members");
+db.Categories = require("./categories")(sequelize);
+db.Members = require("./members")(sequelize);
+db.SubjectCat = require("./subject-cat")(sequelize);
 
 // Ajout des assiciation
-// [Many-to-Many] pour ce type de tables l'ecriture est comme suit:
+// [Many-to-Many] between subject and categories
 db.Subject.belongsToMany(db.Categories, { through: db.SubjectCat });
 db.Categories.belongsToMany(db.Subject, { through: db.SubjectCat });
 
