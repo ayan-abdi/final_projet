@@ -1,7 +1,7 @@
-const subjectRouter = require("./subject-router");
+const postsRouter = require("./posts-router");
 
 const router = require("express").Router();
 
-router.use("/subject", subjectRouter);
+router.use("/posts", postsRouter);
 
 module.exports = router;

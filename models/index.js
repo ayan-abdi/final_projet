@@ -25,15 +25,15 @@ const db = {};
 db.sequelize = sequelize;
 
 // Ajout des models
-db.Subject = require("./subject")(sequelize);
-db.Categories = require("./categories")(sequelize);
+db.Posts = require("./posts")(sequelize);
+// db.Categories = require("./categories")(sequelize);
 db.Members = require("./members")(sequelize);
-db.SubjectCat = require("./subject-cat")(sequelize);
+db.PostsCat = require("./post-cat")(sequelize);
 
 // Ajout des assiciation
 // [Many-to-Many] between subject and categories
-db.Subject.belongsToMany(db.Categories, { through: db.SubjectCat });
-db.Categories.belongsToMany(db.Subject, { through: db.SubjectCat });
+// db.Posts.belongsToMany(db.Categories, { through: db.PostsCat });
+// db.Categories.belongsToMany(db.Posts, { through: db.PostsCat });
 
 // Export de ma db
 module.exports = db;
