@@ -11,7 +11,7 @@ module.exports = (sequelize) => {
     {},
     {
       timestamps: false,
-      tableName: "subjectCategories",
+      tableName: "PostsThemes",
     }
   );
   //   console.log(PostsCat === sequelize.models.PostsCat);

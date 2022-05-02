@@ -1,11 +1,14 @@
+const { Request, Response, NextFunction } = require("express");
+const { BaseSchema } = require("yup");
+
 // Middleware pour  valider le body via yup
 /**
  *
  * @param {BaseSchema} yupValidator
  * @param {number} error
- * @returns {(req: Request, res: response, next: NextFunction) => void}
+ * @returns {(req: Request, res: Response, next: NextFunction) => void}
  */
-const bodyValideted = (yupValidator, error = 422) => {
+const bodyValideted = (yupValidator, errorCode = 422) => {
   /**
    * Middleware pour valider les données du body avec Yup
    * @param {Request} req
@@ -20,7 +23,7 @@ const bodyValideted = (yupValidator, error = 422) => {
         //données validée par le yup (avec validData property)
         req.validData = data;
 
-        return next();
+        next();
       })
       .catch((yupError) => {
         // object errors issue des données validés par le yup
@@ -29,7 +32,7 @@ const bodyValideted = (yupValidator, error = 422) => {
           if (!acc.hasOwnProperty(path)) {
             //Dans le cas où acc n'a pas de propriété path alors renvoie-moi le code suivant
             acc[path] = [message];
-            // faire un log pour voir
+            TODO; // faire un log pour voir
           } else {
             acc[path].push(message);
           }

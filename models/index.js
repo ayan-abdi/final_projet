@@ -26,14 +26,33 @@ db.sequelize = sequelize;
 
 // Ajout des models
 db.Posts = require("./posts")(sequelize);
-// db.Categories = require("./categories")(sequelize);
 db.Members = require("./members")(sequelize);
 db.PostsCat = require("./post-cat")(sequelize);
+db.Themes = require("./themes")(sequelize);
+db.Messages = require("./messages")(sequelize);
 
 // Ajout des assiciation
 // [Many-to-Many] between subject and categories
-// db.Posts.belongsToMany(db.Categories, { through: db.PostsCat });
-// db.Categories.belongsToMany(db.Posts, { through: db.PostsCat });
+db.Posts.belongsToMany(db.Themes, { through: db.PostsCat });
+db.Themes.belongsToMany(db.Posts, { through: db.PostsCat });
+// Messages-Posts  [One-to-many]
+db.Posts.hasMany(db.Messages, {
+  foreignKey: {
+    allowNull: false,
+  },
+  onDelete: "NO ACTION",
+  onUpdate: "CASCADE",
+});
+db.Messages.belongsTo(db.Posts);
+// Messages-Members [One-to-many]
+db.Members.hasMany(db.Messages, {
+  foreignKey: {
+    allowNull: false,
+  },
+  onDelete: "NO ACTION",
+  onUpdate: "CASCADE",
+});
+db.Messages.belongsTo(db.Members);
 
 // Export de ma db
 module.exports = db;

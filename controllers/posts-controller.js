@@ -7,6 +7,9 @@ const {
 const postsController = {
   // Actions principaux
   getAll: async (req, res) => {
+    const text = "coucou la voiture";
+    const splitText = text.split("u");
+    console.log(splitText);
     // Ajout de pagination avec offset et limit
     const { rows, count } = await db.Posts.findAndCountAll({
       distinct: true,
@@ -23,8 +26,8 @@ const postsController = {
   },
   add: async (req, res) => {
     // Recuperation des données à ajouter dans la DB
-    const data = req.validData;
 
+    const data = req.validData;
     //  Recuperation des données lié au login
     data.memberId = req.user.id;
 

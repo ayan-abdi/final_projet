@@ -27,7 +27,7 @@ db.sequelize
 
 // Synchroniser model avec DB
 if (NODE_ENV === "development") {
-  // db.sequelize.sync({ alter: true });
+  // db.sequelize.sync({ force: true });
 }
 
 // Add routing
