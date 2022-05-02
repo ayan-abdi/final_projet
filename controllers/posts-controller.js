@@ -7,19 +7,21 @@ const {
 const postsController = {
   // Actions principaux
   getAll: async (req, res) => {
-    const text = "coucou la voiture";
-    const splitText = text.split("u");
-    console.log(splitText);
+    // const text = "coucou la voiture";
+    // const splitText = text.split("u");
+    // console.log(splitText);
     // Ajout de pagination avec offset et limit
     const { rows, count } = await db.Posts.findAndCountAll({
       distinct: true,
+      // offset,
+      // limit, 
 
       // include: db.Categories           // Many to Many avec toutes les infos (donc la table intermediaire)
       include: [
         {
-          model: db.Categories,
+          model: db.Themes,
           through: { attributes: [] },
-        },
+        } 
       ],
     });
     res.json(new SuccesArrayRes(rows, count)); //  <= injecter ici un schema de reponse
