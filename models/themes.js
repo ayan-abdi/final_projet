@@ -9,7 +9,7 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         // tableName: "Themes",
-        unique: "UK_Themes__Name",
+        // unique: "UK_Themes__Name",
       },
       content: {
         type: DataTypes.STRING,

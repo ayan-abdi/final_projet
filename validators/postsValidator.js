@@ -4,7 +4,7 @@ const yup = require("yup");
 const postsValidatorAdd = yup.object().shape({
   title: yup.string().required().max(50),
   content: yup.string().required().max(2000),
-  createdOn: yup.date().default(() => new Date()),
+  // createdOn: yup.date().default(() => new Date()),
   // liaison avec la table many-to-many
   themes: yup.array(yup.number()).default([]), //<= ? Dans la db c'est l'id du themes qui va etre enregistrer
 });

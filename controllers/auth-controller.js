@@ -1,11 +1,13 @@
 const db = require("../models");
+const bcrypt = require('bcrypt');
+const { generateJwt } = require('../utils/jwt-utils');
 const { ErrorRes } = require("../schemas/error-schema");
 
 const authController = {
   register: async (req, res) => {
     // Recup des données
     const { pseudo, email } = req.validData;
-    TODO; //log ici
+     //log ici
 
     //  Hashage du pwd via bcrypt
     const password = await bcrypt.hash(re.validData.password, 10);
@@ -54,7 +56,7 @@ const authController = {
     if (!isValid) {
       return res
         .status(422)
-        .json(new ErrorRes("Nous trouvons pas vos données", 422));
+        .json(new ErrorRes("Votre pwd est invalid", 422));
     }
 
     //  Generation d'un jwt

@@ -16,7 +16,7 @@ const authentificateJwt = (options = { adminRight: false }) => {
     // console.log(req.headers); à cheacker le contenue de ce log
     // recup du jwt
     const token = headerAuth && headerAuth.split("")[1]; /// ??????
-    // TODO supprimer console
+    //  supprimer console
     console.log(headerAuth, token);
     // Dans le cas ou il n'y aurait pas de token
     if (!token) {
@@ -44,7 +44,7 @@ const authentificateJwt = (options = { adminRight: false }) => {
 
     // Ajouter des infos du token dans {request}
     req.user = tokenData;
-    TODO; // faire un log ici????
+     // faire un log ici????
 
     next();
   };

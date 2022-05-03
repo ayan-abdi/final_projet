@@ -1,6 +1,7 @@
 const yup = require("yup");
 
-const regexPwd = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{3,}$/;
+const regexPwd = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).+$/;
+// const regexPwd = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{3,}$/;
 
 const registerValidator = yup.object().shape({
   pseudo: yup.string().trim().required().min(3).max(50),

@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const pagination = require('./middlewares/pagination');
 
 // Propage les errors
 require("express-async-errors");
@@ -15,7 +16,7 @@ const app = express();
 
 // Add middlewares
 app.use(express.json());
-// add pagination middleware ici
+app.use(pagination()); 
 app.use(cors());
 
 // Initialiser DB
