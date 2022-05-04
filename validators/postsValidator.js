@@ -14,7 +14,7 @@ const postsValidatorUpdate = yup.object().shape({
 });
 // Table: ForeinKey
 const postsCatValidator = yup.object().shape({
-  themes: yup.array(yup.number()).default([]),
+  Themes: yup.array(yup.number()).default([]),
 });
 module.exports = {
   postsValidatorAdd,

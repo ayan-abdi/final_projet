@@ -1,5 +1,10 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
+/**
+ * Représentation du model Category
+ * @param {Sequelize} sequelize
+ * @returns
+ */
 module.exports = (sequelize) => {
   const Messages = sequelize.define("messages", {
     content: {

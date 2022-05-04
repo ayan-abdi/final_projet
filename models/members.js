@@ -1,5 +1,10 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
+/**
+ * Représentation du model Category
+ * @param {Sequelize} sequelize
+ * @returns
+ */
 module.exports = (sequelize) => {
   // Initialisation de mon model Posts
   const Members = sequelize.define(
@@ -18,6 +23,11 @@ module.exports = (sequelize) => {
       password: {
         type: DataTypes.CHAR(60),
         allowNull: false,
+      },
+      isAdmin: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     },
     {

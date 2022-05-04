@@ -12,12 +12,12 @@ const authentificateJwt = (options = { adminRight: false }) => {
    */
   return async (req, res, next) => {
     // header à recuperé
-    const headerAuth = req.headers["autorization"];
+    const headerAuth = req.headers["authorization"];
     // console.log(req.headers); à cheacker le contenue de ce log
     // recup du jwt
-    const token = headerAuth && headerAuth.split("")[1]; /// ??????
+    const token = headerAuth && headerAuth.split(" ")[1]; /// ??????
     //  supprimer console
-    console.log(headerAuth, token);
+    console.log(token);
     // Dans le cas ou il n'y aurait pas de token
     if (!token) {
       return res.sendStatus(401);
@@ -33,7 +33,7 @@ const authentificateJwt = (options = { adminRight: false }) => {
     if (options.adminRight) {
       const admin = await db.Members.findOne({
         where: {
-          [Op.and]: [{ id: tokenData.id }, { isAdmin: true }],
+          [Op.and]: [{ id: tokenData.id }, { isAdmin: false }],
         },
       });
       // Code d'erreur si pas de droit d'utilisation
@@ -44,7 +44,7 @@ const authentificateJwt = (options = { adminRight: false }) => {
 
     // Ajouter des infos du token dans {request}
     req.user = tokenData;
-     // faire un log ici????
+    // faire un log ici????
 
     next();
   };

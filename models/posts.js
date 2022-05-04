@@ -1,5 +1,10 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
+/**
+ * Représentation du model Category
+ * @param {Sequelize} sequelize
+ * @returns
+ */
 module.exports = (sequelize) => {
   // Initialisation de mon model Posts
   const Posts = sequelize.define("Posts", {
@@ -10,6 +15,10 @@ module.exports = (sequelize) => {
     },
     content: {
       type: DataTypes.STRING(2000),
+      allowNull: false,
+    },
+    adminId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   });

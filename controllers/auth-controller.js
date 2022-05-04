@@ -1,19 +1,26 @@
 const db = require("../models");
-const bcrypt = require('bcrypt');
-const { generateJwt } = require('../utils/jwt-utils');
+const bcrypt = require("bcrypt");
+const { generateJwt } = require("../utils/jwt-utils");
 const { ErrorRes } = require("../schemas/error-schema");
+const { Op } = require("sequelize");
 
 const authController = {
   register: async (req, res) => {
     // Recup des données
     const { pseudo, email } = req.validData;
-     //log ici
+    //log ici
 
     //  Hashage du pwd via bcrypt
-    const password = await bcrypt.hash(re.validData.password, 10);
+    const password = await bcrypt.hash(req.validData.password, 10);
 
     //  Creer un compte avec le minimum requis
-    const member = await db.Members.create({ pseudo, email, password });
+    const member = await db.Members.create({
+      pseudo,
+      email,
+      password,
+      // isAdmin: true,
+    });
+    // console.log("Register", member);
 
     // Ajout d'un JWT + condition pour generer un token
     const token = await generateJwt({
@@ -29,7 +36,7 @@ const authController = {
   login: async (req, res) => {
     const { identity, password } = req.validData;
 
-    const member = await db.Members.fineOne({
+    const member = await db.Members.findOne({
       where: {
         // Dans le cas ou pour recuperer son login l'identity correspond soit au pseudo ou password
         [Op.or]: [
@@ -42,7 +49,7 @@ const authController = {
         ],
       },
     });
-
+    console.log("mon login", member);
     //  Dans le cas le member y est pas
     if (!member) {
       return res
@@ -54,9 +61,7 @@ const authController = {
 
     //  Dans le cas ou le pwd n'est pas hashé comme il faut
     if (!isValid) {
-      return res
-        .status(422)
-        .json(new ErrorRes("Votre pwd est invalid", 422));
+      return res.status(422).json(new ErrorRes("Votre pwd est invalid", 422));
     }
 
     //  Generation d'un jwt

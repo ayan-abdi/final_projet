@@ -1,5 +1,10 @@
 const { Sequelize, DataTypes } = require("sequelize");
 
+/**
+ * Représentation du model Category
+ * @param {Sequelize} sequelize
+ * @returns
+ */
 module.exports = (sequelize) => {
   // Initialisation de mon model Posts
   const Themes = sequelize.define(
@@ -9,7 +14,7 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         // tableName: "Themes",
-        // unique: "UK_Themes__Name",
+        unique: "UK_Themes__Name",
       },
       content: {
         type: DataTypes.STRING,
@@ -17,7 +22,7 @@ module.exports = (sequelize) => {
       },
     },
     {
-      timestamps: false,
+      timestamps: true,
     }
   );
   //   console.log(themes === sequelize.models.themes);
