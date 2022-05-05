@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { date } = require("yup");
 const db = require("../models");
 const { NotFoundErrorRes, ErrorRes } = require("../schemas/error-schema");
@@ -51,7 +52,7 @@ const postsController = {
     const data = req.validData;
     //  Recuperation des données lié au login
     // data.userId = req.user.id;
-    console.log("hello data add", { ...data, adminId: userId });
+    // console.log("hello data add", { ...data, adminId: userId });
 
     // Ajouter des transaction pour securiser les op DB
     const transaction = await db.sequelize.transaction();
@@ -59,7 +60,7 @@ const postsController = {
     try {
       // Ajout d'un element subject
       const postsAdded = await db.Posts.create(
-        { ...data, adminId: userId },
+        { ...data, memberId: userId },
         { transaction }
       );
 
@@ -79,7 +80,7 @@ const postsController = {
 
   update: async (req, res) => {
     const id = parseInt(req.params.id);
-    const isAdmin = req.user.id;
+    const memberId = req.user.id;
     const data = req.validData;
     const transaction = await db.sequelize.transaction();
 
@@ -87,7 +88,7 @@ const postsController = {
       where: {
         [Op.and]: [
           { id }, // <= id de l'element en question
-          { isAdmin }, //<= id du member qui a l'abilité de updater le contenu
+          { memberId }, //<= id du member qui a l'abilité de updater le contenu
         ],
       },
       returning: true,
@@ -98,12 +99,12 @@ const postsController = {
       return res.status(400).json(new ErrorRes("Row Update uncorrect"));
     }
     await transaction.commit();
-    res.json(SuccessObjectRes(updatedData));
+    res.json(new SuccessObjectRes(updatedData));
   },
 
   delete: async (req, res) => {
     const id = parseInt(req.params.id);
-    const isAdmin = req.user.id;
+    const memberId = req.user.id;
 
     const target = await db.Posts.findByPk(id);
     if (!target) {
@@ -111,7 +112,7 @@ const postsController = {
         .status(404)
         .json(new NotFoundErrorRes("Bad post found to delete"));
     }
-    if (target.isAdmin !== isAdmin) {
+    if (target.memberId !== memberId) {
       return res
         .status(403)
         .json(new NotFoundErrorRes("vous n etes pas admin pour deleter"));
@@ -124,27 +125,26 @@ const postsController = {
 
   addThemes: async (req, res) => {
     const id = parseInt(req.params.id);
-    const userId = req.user.id;
+    const memberId = req.user.id;
 
     const data = req.validData;
 
-    const post = await db.Posts.findByPk(id);
+    const post = await db.Posts.findByPk(id, { include: db.Themes });
 
     if (!post) {
       return res
         .status(404)
         .json(new NotFoundErrorRes("Post (themes) not found"));
     }
-    if (post.adminId !== userId) {
+    if (post.memberId !== memberId) {
       return res
         .status(403)
-        .json(new NotFoundErrorRes("Only Admin can create themes"));
+        .json(new ErrorRes("Only Admin can create themes", 403));
     }
     // Dans le cas ou le theme existe déjà
-    const themeDuplon = post.Themes?.map((t) => t.id).find((id) =>
-      data.Themes.includes(id)
-    );
-
+    const themeDuplon = post.themes
+      .map((t) => t.id)
+      .find((id) => data.Themes.includes(id));
     if (themeDuplon) {
       return res.status(400).json(new ErrorRes("Le theme existe déjà !"));
     }
@@ -165,7 +165,7 @@ const postsController = {
   removeThemes: async (req, res) => {
     const id = parseInt(req.params.id);
     const data = req.validData;
-    const isAdmin = req.user.id;
+    const memberId = req.user.id;
 
     const posts = await db.Posts.findByPk(id);
 
@@ -174,7 +174,7 @@ const postsController = {
         .status(404)
         .json(new NotFoundErrorRes("Posts not found for remove theme"));
     }
-    if (posts.isAdmin !== isAdmin) {
+    if (posts.memberId !== memberId) {
       return res
         .status(403)
         .json(
@@ -210,24 +210,23 @@ const postsController = {
   },
 
   addMessage: async (req, res) => {
-    const id = parseInt(req.params.id);
+    const idPost = parseInt(req.params.id);
     const data = req.validData;
+    data.memberId = req.user.id; //Recupère l'id de l'auteur de message
 
-    data.userId = req.user.id;
+    const post = await db.Posts.findByPk(idPost);
+    // data.postId = post.id;
 
-    const posts = await db.Posts.findByPk(id);
-    if (!posts) {
-      return res
-        .status(404)
-        .json(new NotFoundErrorResponse("Posts not found addM"));
+    if (!post) {
+      return res.status(404).json(new NotFoundErrorRes("Posts not found addM"));
     }
 
     const transaction = await db.sequelize.transaction();
     try {
-      const message = await posts.createMessage(data, { transaction });
+      const message = await post.createMessage(data, { transaction });
       await transaction.commit();
 
-      res.json(new SuccessObjectResponse(message));
+      res.json(new SuccessObjectRes(message));
     } catch (error) {
       transaction.rollback();
       throw error;
