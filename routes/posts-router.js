@@ -1,5 +1,5 @@
 const postsController = require("../controllers/posts-controller");
-const { authentificateJwt } = require("../middlewares/authentificate-jwt");
+const authentificateJwt = require("../middlewares/authentificate-jwt");
 const bodyValideted = require("../middlewares/body-validation");
 const messagesValidator = require("../validators/messagesValidator");
 const postsRouter = require("express").Router();

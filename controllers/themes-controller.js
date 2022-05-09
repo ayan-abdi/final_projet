@@ -8,7 +8,7 @@ const {
 const themesController = {
   // Actions principaux
   getAll: async (req, res) => {
-    const { rows, count } = await db.themes.findAndCountAll({
+    const { rows, count } = await db.Themes.findAndCountAll({
       offset: req.pagination.offset,
       limit: req.pagination.limit,
       order: [["createdAt", "ASC"]],
@@ -18,7 +18,7 @@ const themesController = {
   getById: async (req, res) => {
     const id = parseInt(req.params.id);
 
-    const themes = await db.themes.findOne({
+    const themes = await db.Themes.findOne({
       where: { id: id },
     });
 
@@ -30,18 +30,17 @@ const themesController = {
 
   add: async (req, res) => {
     const data = req.validData;
-   
-    const themesAdd = await db.themes.create(data);
+
+    const themesAdd = await db.Themes.create(data);
     res.json(new SuccessObjectRes(themesAdd));
     // console.log("hello theme", themesAdd);
-    
   },
 
   update: async (req, res) => {
     const id = parseInt(req.params.id);
     const data = req.validData;
 
-    const resultUpdate = await db.themes.update(data, {
+    const resultUpdate = await db.Themes.update(data, {
       where: { id }, // Ecriture simplifié -> { id: id }
       returning: true,
     });
@@ -57,7 +56,7 @@ const themesController = {
   delete: async (req, res) => {
     const id = parseInt(req.params.id);
 
-    const nbRow = await db.themes.destroy({
+    const nbRow = await db.Themes.destroy({
       where: { id },
     });
 

@@ -20,12 +20,15 @@ const pagination = (options) => {
    */
   return (req, res, next) => {
     const userOffset = parseInt(req.query.offset); //localhost:8000/api/auth/register?limit=10 =>  query= ?limit=10
-    const userlimit = parseInt(req.query.limit);  //POURQUOI PARSER?????
+    const userlimit = parseInt(req.query.limit); //POURQUOI PARSER?????
 
-    const offset = !isNaN(userOffset) && userOffset > 0 ? userOffset : 0;  //Si userOffset est different de isNAN et plus grand que 0 dc affiche moi userOffset sinnon affiche 0
-    const limit = !isNaN(userlimit) && userlimit > 0 ? Math.min(userlimit, maxLimit) : defaultLimit; // Math.min = affiche moi la plus petite limite entre (userLimit et maxlimit)
+    const offset = !isNaN(userOffset) && userOffset > 0 ? userOffset : 0; //Si userOffset est different de isNAN et plus grand que 0 dc affiche moi userOffset sinnon affiche 0
+    const limit =
+      !isNaN(userlimit) && userlimit >= 0
+        ? Math.min(userlimit, maxLimit)
+        : defaultLimit; // Math.min = affiche moi la plus petite limite entre (userLimit et maxlimit)
 
-    req.pagination = { offset, limit }; 
+    req.pagination = { offset, limit };
     // log de req.pagination
     next();
   };

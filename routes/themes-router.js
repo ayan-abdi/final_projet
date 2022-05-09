@@ -1,5 +1,5 @@
 const themesController = require("../controllers/themes-controller");
-const { authentificateJwt } = require("../middlewares/authentificate-jwt");
+const authentificateJwt = require("../middlewares/authentificate-jwt");
 const bodyValideted = require("../middlewares/body-validation");
 const themesValidator = require("../validators/themesValidator");
 
@@ -9,7 +9,7 @@ themeRouter
   .route("/")
   .get(themesController.getAll)
   .post(
-    authentificateJwt({ adminRight: false }),
+    authentificateJwt({ adminRight: true }),
     bodyValideted(themesValidator),
     themesController.add
   );

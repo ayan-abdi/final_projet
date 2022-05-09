@@ -20,10 +20,10 @@ const postsController = {
       offset,
       limit,
 
-      // include: db.Categories           // Many to Many avec toutes les infos (donc la table intermediaire)
+      // include: db.Themes           // Many to Many avec toutes les infos (donc la table intermediaire)
       include: [
         {
-          model: db.themes,
+          model: db.Themes,
           through: { attributes: [] },
         },
       ],

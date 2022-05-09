@@ -28,7 +28,7 @@ db.sequelize = sequelize;
 db.Posts = require("./posts")(sequelize);
 db.Members = require("./members")(sequelize);
 db.PostsCat = require("./post-cat")(sequelize);
-db.themes = require("./themes")(sequelize);
+db.Themes = require("./themes")(sequelize);
 db.Messages = require("./messages")(sequelize);
 
 // Ajout des assiciation
@@ -42,8 +42,8 @@ db.Messages.belongsTo(db.Members);
 db.Posts.hasMany(db.Messages);
 db.Messages.belongsTo(db.Posts);
 // [Many-to-Many] between Posts and themes
-db.Posts.belongsToMany(db.themes, { through: db.PostsCat });
-db.themes.belongsToMany(db.Posts, { through: db.PostsCat });
+db.Posts.belongsToMany(db.Themes, { through: db.PostsCat });
+db.Themes.belongsToMany(db.Posts, { through: db.PostsCat });
 
 // Export de ma db
 module.exports = db;

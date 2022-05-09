@@ -1,55 +1,68 @@
-const { decodeJwt, generateJwt } = require("../utils/jwt-utils");
+const { decodeJWT, decodeJwt } = require("../utils/jwt-utils");
+const db = require("../models");
+const { Op } = require("sequelize");
+
 /**
- *
- * @param {adminRight: boolean} options
+ * Middleware d'authentification via les JSON Web Token
+ * @param {{adminRight: boolean}} options
  * @returns {(req: Request, res: Response, next: NextFunction) => Void}
  */
 const authentificateJwt = (options = { adminRight: false }) => {
   /**
+   * Middleware pour gérer les jwt
    * @param {Request} req
    * @param {Response} res
    * @param {NextFunction} next
    */
   return async (req, res, next) => {
-    // header à recuperé
-    const headerAuth = req.headers["authorization"];
-    // console.log(req.headers); à cheacker le contenue de ce log
-    // recup du jwt
-    const token = headerAuth && headerAuth.split(" ")[1]; /// ??????
-    //  supprimer console
-    console.log(token);
-    // Dans le cas ou il n'y aurait pas de token
+    // Récuperation du header d'authenfication
+    // -> Exemple de résultat: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6..."
+    const authHeader = req.headers["authorization"];
+
+    // Récuperation du JWT
+    const token = authHeader && authHeader.split(" ")[1];
+
+    // Si aucun token n'a été recu, erreur 401.
     if (!token) {
       return res.sendStatus(401);
     }
-    // Recup des données du Jwt
+
+    // Récuperation des données du JWT
     let tokenData;
     try {
+      // Extraction des données
       tokenData = await decodeJwt(token);
     } catch (error) {
+      // En cas d'erreur, envoi d'un erreur
       return res.sendStatus(403);
     }
-    // Verifier le droit d'utilisation
+
+    console.log(options);
+
+    // Vérification des droits de l'utilisateur si le flag "AdminRight" est présent
     if (options.adminRight) {
+      // Validation des droits via la base de donnée
+      // -> Certitude d'avoir les données à jours
+      console.log("BBBBBBBBBBB");
       const admin = await db.Members.findOne({
         where: {
-          [Op.and]: [{ id: tokenData.id }, { isAdmin: false }],
+          [Op.and]: [{ id: tokenData.id }, { isAdmin: true }],
         },
       });
-      // Code d'erreur si pas de droit d'utilisation
+
+      // Erreur 403 si l'utilisateur n'a pas les droits
       if (!admin) {
+        console.log("iiiiiiiiiiiiiiiii");
         return res.sendStatus(403);
       }
     }
 
-    // Ajouter des infos du token dans {request}
+    // Ajout des infos du token a l'object "request" de Express
     req.user = tokenData;
-    // faire un log ici????
 
+    // On continue :)
     next();
   };
 };
 
-module.exports = {
-  authentificateJwt,
-};
+module.exports = authentificateJwt;
