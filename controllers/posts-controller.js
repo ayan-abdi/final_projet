@@ -23,7 +23,7 @@ const postsController = {
       // include: db.Categories           // Many to Many avec toutes les infos (donc la table intermediaire)
       include: [
         {
-          model: db.Themes,
+          model: db.themes,
           through: { attributes: [] },
         },
       ],
@@ -65,7 +65,7 @@ const postsController = {
       );
 
       // Ajout d'un element categories via l'id(if existed id)
-      await postsAdded.addThemes(data.Themes, { transaction });
+      await postsAdded.addThemes(data.themes, { transaction });
 
       await transaction.commit();
 
@@ -129,7 +129,7 @@ const postsController = {
 
     const data = req.validData;
 
-    const post = await db.Posts.findByPk(id, { include: db.Themes });
+    const post = await db.Posts.findByPk(id, { include: db.themes });
 
     if (!post) {
       return res
@@ -144,7 +144,7 @@ const postsController = {
     // Dans le cas ou le theme existe déjà
     const themeDuplon = post.themes
       .map((t) => t.id)
-      .find((id) => data.Themes.includes(id));
+      .find((id) => data.themes.includes(id));
     if (themeDuplon) {
       return res.status(400).json(new ErrorRes("Le theme existe déjà !"));
     }
@@ -154,7 +154,7 @@ const postsController = {
     const postsAfter = await db.Posts.findByPk(id, {
       include: [
         {
-          model: db.Themes,
+          model: db.themes,
           through: { attributes: [] },
         },
       ],

@@ -20,6 +20,7 @@ const authController = {
       password,
       // isAdmin: true,
     });
+    console.log('hello', member);
     // console.log("Register", member);
 
     // Ajout d'un JWT + condition pour generer un token

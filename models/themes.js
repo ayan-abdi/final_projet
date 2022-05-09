@@ -7,7 +7,7 @@ const { Sequelize, DataTypes } = require("sequelize");
  */
 module.exports = (sequelize) => {
   // Initialisation de mon model Posts
-  const Themes = sequelize.define(
+  const themes = sequelize.define(
     "themes",
     {
       title: {
@@ -25,5 +25,5 @@ module.exports = (sequelize) => {
     }
   );
   //   console.log(themes === sequelize.models.themes);
-  return Themes;
+  return themes;
 };
